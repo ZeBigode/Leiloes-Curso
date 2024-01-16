@@ -23,6 +23,40 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
+    
+    
+    public void venderProduto(int idProduto) {
+        try {
+            conn = new conectaDAO().connectDB();
+
+            String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, idProduto);
+
+                int rowsUpdated = pstmt.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Produto não encontrado ou já vendido.");
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Erro ao fechar a conexão: " + e.getMessage());
+            }
+        }
+    }
+    
+    
+    
     public void cadastrarProduto (ProdutosDTO produto){
         try {
             conn = new conectaDAO().connectDB();
